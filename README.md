@@ -23,7 +23,7 @@ Install with Homebrew:
 
 ```bash
 brew tap k-tech-org/container-compose
-brew install container-compose
+brew install k-tech-org/container-compose/container-compose
 ```
 
 ## Usage

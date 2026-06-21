@@ -74,9 +74,9 @@ Homebrew tap.
 After the tap update, verify installation from the tap:
 
 ```bash
-brew audit --strict --online container-compose
-brew install --build-from-source container-compose
-brew test container-compose
+brew audit --strict --online k-tech-org/container-compose/container-compose
+brew install --build-from-source k-tech-org/container-compose/container-compose
+brew test k-tech-org/container-compose/container-compose
 ```
 
 ## Homebrew Notes

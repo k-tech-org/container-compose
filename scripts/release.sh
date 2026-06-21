@@ -274,7 +274,7 @@ Release $TAG.
 Install with Homebrew:
 
 brew tap k-tech-org/container-compose
-brew install container-compose
+brew install k-tech-org/container-compose/container-compose
 EOF
 
 if [[ "$RUN_GIT" -eq 1 ]]; then
