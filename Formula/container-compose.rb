@@ -4,7 +4,7 @@ class ContainerCompose < Formula
   desc "Docker Compose compatibility wrapper for Apple's container CLI"
   homepage "https://github.com/k-tech-org/container-compose"
   url "https://github.com/k-tech-org/container-compose/releases/download/v0.1.0/container_compose-0.1.0.tar.gz"
-  sha256 "REPLACE_WITH_DIST_SHA256"
+  sha256 "f63474821d893e81843705dbf1c82384f97ff0e777b739b4df5d277b8a3cb172"
   license "MIT"
 
   depends_on "libyaml"
