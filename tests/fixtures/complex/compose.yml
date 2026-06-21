@@ -1,0 +1,79 @@
+services:
+  app:
+    build:
+      context: ./app
+    ports:
+      - target: 80
+        published: "18087"
+        protocol: tcp
+    networks:
+      - frontend
+      - backend
+
+  backend:
+    image: nginx:1.27-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1/ >/dev/null"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    networks:
+      - backend
+
+  writer:
+    image: nginx:1.27-alpine
+    command: sh -c 'echo named-volume-ok > /data/result.txt'
+    volumes:
+      - app-data:/data
+
+  dnscheck:
+    image: nginx:1.27-alpine
+    command: wget -q -O- http://backend
+    networks:
+      - backend
+    profiles:
+      - checks
+
+  featurecheck:
+    image: nginx:1.27-alpine
+    command: >
+      sh -c 'test "$$FEATURE_FLAG" = "enabled"
+      && grep -q "secret-value" /run/secrets/app_secret
+      && grep -q "config-value" /feature.conf
+      && wget -q -O- http://backend | grep -q "Welcome to nginx"'
+    env_file:
+      - ./env/feature.env
+    secrets:
+      - app_secret
+    configs:
+      - source: app_config
+        target: /feature.conf
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - backend
+    profiles:
+      - checks
+
+  amd64check:
+    image: nginx:1.27-alpine
+    platform: linux/amd64
+    command: sh -c 'test "$(uname -m)" = "x86_64"'
+    profiles:
+      - amd64
+
+volumes:
+  app-data:
+
+networks:
+  frontend:
+  backend:
+
+secrets:
+  app_secret:
+    file: ./secrets/app_secret.txt
+
+configs:
+  app_config:
+    file: ./configs/app.conf

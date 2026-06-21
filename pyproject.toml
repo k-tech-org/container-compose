@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "container-compose"
+version = "0.1.0"
+description = "Docker Compose compatibility wrapper for Apple container"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "container-compose contributors" }]
+dependencies = [
+  "PyYAML>=6.0",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: System :: Systems Administration",
+]
+
+[project.scripts]
+container-compose = "container_compose_proxy.cli:main"
+cc-compose = "container_compose_proxy.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/k-tech-org/container-compose"
+Repository = "https://github.com/k-tech-org/container-compose"
+Issues = "https://github.com/k-tech-org/container-compose/issues"
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+  "integration: tests that require Apple container, network image pulls, and a working local runtime",
+]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,39 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python packaging and build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+
+# Test and type-check caches
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+
+# Tooling caches
+.uv-cache/
+.cache/
+
+# Homebrew local test artifacts
+*.bottle.*
+*.bottle_manifest.json
+
+# macOS and editor files
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
