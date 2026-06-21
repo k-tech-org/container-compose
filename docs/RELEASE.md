@@ -62,23 +62,9 @@ make release VERSION=0.1.0 RELEASE_ARGS="--skip-git"
 working tree. A real release does require a clean working tree so unrelated
 changes are not included in the release commit.
 
-The release script can update the Homebrew tap without a pre-existing local
-checkout. It first uses `HOMEBREW_TAP_DIR`, an explicit `--tap-dir`, an existing
-`../homebrew-container-compose` checkout, or Homebrew's known tap checkout. If
-none exist, it clones `git@github.com:k-tech-org/homebrew-container-compose.git`
-into a temporary directory, commits the formula update, pushes it, and removes
-the temporary checkout on exit. To use a specific checkout, provide the tap path:
-
-```bash
-make release VERSION=0.1.0 RELEASE_ARGS="--tap-dir ../homebrew-container-compose"
-```
-
-You can also set:
-
-```bash
-export HOMEBREW_TAP_DIR=/path/to/homebrew-container-compose
-make release VERSION=0.1.0
-```
+The release script updates the Homebrew tap from a temporary checkout. It clones
+`git@github.com:k-tech-org/homebrew-container-compose.git`, commits the Formula
+update, pushes it, and removes the temporary checkout on exit.
 
 Pass `--skip-tap` when the GitHub release should be created without updating the
 Homebrew tap.

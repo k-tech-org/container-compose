@@ -17,7 +17,6 @@ Options:
   --skip-git               Do not commit, tag, or push.
   --skip-github-release    Do not create the GitHub release.
   --skip-tap               Do not update the Homebrew tap.
-  --tap-dir PATH           Homebrew tap checkout to update.
   --branch NAME            Branch to push. Defaults to the current branch.
   -h, --help               Show this help.
 
@@ -44,10 +43,9 @@ RUN_BUILD=1
 RUN_GIT=1
 RUN_GITHUB_RELEASE=1
 RUN_TAP=1
-TAP_DIR="${HOMEBREW_TAP_DIR:-}"
-DEFAULT_TAP_DIR=""
 DEFAULT_TAP_REPO="git@github.com:k-tech-org/homebrew-container-compose.git"
 TAP_CLONE_DIR=""
+TAP_DIR=""
 BRANCH=""
 
 while [[ $# -gt 0 ]]; do
@@ -68,14 +66,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --skip-tap)
       RUN_TAP=0
-      ;;
-    --tap-dir)
-      if [[ $# -lt 2 ]]; then
-        echo "--tap-dir requires a value" >&2
-        exit 2
-      fi
-      TAP_DIR="$2"
-      shift
       ;;
     --branch)
       if [[ $# -lt 2 ]]; then
@@ -105,7 +95,6 @@ fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
-DEFAULT_TAP_DIR="$(cd "$ROOT_DIR/.." && pwd)/homebrew-container-compose"
 
 if ! command -v uv >/dev/null 2>&1; then
   echo "uv is required" >&2
@@ -137,24 +126,11 @@ cleanup_release_files() {
 }
 trap cleanup_release_files EXIT
 
-if [[ "$RUN_TAP" -eq 1 && -z "$TAP_DIR" && -d "$DEFAULT_TAP_DIR/.git" ]]; then
-  TAP_DIR="$DEFAULT_TAP_DIR"
-fi
-
-if [[ "$RUN_TAP" -eq 1 && -z "$TAP_DIR" ]] && command -v brew >/dev/null 2>&1; then
-  TAP_DIR="$(brew --repo k-tech-org/container-compose 2>/dev/null || true)"
-fi
-
-if [[ "$RUN_TAP" -eq 1 && -z "$TAP_DIR" ]]; then
+if [[ "$RUN_TAP" -eq 1 ]]; then
   TAP_CLONE_DIR="$(mktemp -d)"
   echo "Cloning default Homebrew tap into temporary checkout: $TAP_CLONE_DIR"
   git clone "$DEFAULT_TAP_REPO" "$TAP_CLONE_DIR"
   TAP_DIR="$TAP_CLONE_DIR"
-fi
-
-if [[ "$RUN_TAP" -eq 1 && -n "$TAP_DIR" && ! -d "$TAP_DIR/.git" ]]; then
-  echo "Homebrew tap directory is not a git checkout: $TAP_DIR" >&2
-  exit 1
 fi
 
 if [[ "$RUN_GIT" -eq 1 && -z "$BRANCH" ]]; then
